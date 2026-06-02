@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Auto Nejma Support Client</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* CONTAINER */
+.chat-container {
+    width: 420px;
+    height: 650px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* HEADER */
+.header {
+    background: #111827;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* CHAT */
+.chat {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+/* MESSAGE */
+.msg {
+    margin: 8px;
+    padding: 10px;
+    border-radius: 12px;
+    max-width: 80%;
+}
+
+.user {
+    background: #2563eb;
+    color: white;
+    margin-left: auto;
+}
+
+.bot {
+    background: #e5e7eb;
+    color: #111;
+    margin-right: auto;
+}
+
+/* SUGGESTIONS */
+.suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: #fafafa;
+}
+
+.suggestion {
+    background: #e0e7ff;
+    color: #1e3a8a;
+    padding: 8px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.suggestion:hover {
+    background: #c7d2fe;
+}
+
+/* INPUT */
+.input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e4fd6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<div class="header">
+🚗 Auto Nejma - Support Client IA
+</div>
+
+<div class="chat" id="chat"></div>
+
+<!-- SUGGESTIONS PLUS RICHES -->
+<div class="suggestions">
+
+<div class="suggestion" onclick="ask('Ma voiture est en retard de livraison')">🚚 Retard livraison</div>
+<div class="suggestion" onclick="ask('Le standard ne répond pas')">📞 Standard</div>
+<div class="suggestion" onclick="ask('J’ai une panne moteur')">⚠️ Panne moteur</div>
+<div class="suggestion" onclick="ask('Problème de freinage')">🛑 Freinage</div>
+<div class="suggestion" onclick="ask('Climatisation ne fonctionne pas')">❄️ Climatisation</div>
+<div class="suggestion" onclick="ask('Bruit étrange dans la voiture')">🔧 Bruit moteur</div>
+<div class="suggestion" onclick="ask('Je veux faire une réclamation')">🧾 Réclamation</div>
+
+</div>
+
+<div class="input-area">
+<input type="text" id="input" placeholder="Écrivez votre message...">
+<button onclick="send()">Envoyer</button>
+</div>
+
+</div>
+
+<script>
+
+// ======================
+// BASE TECHNICIENS + RDV
+// ======================
+function getTechnician(problem) {
+
+    if (problem.includes("moteur") || problem.includes("panne")) {
+        return "👨‍🔧 Technicien : Spécialiste Diagnostic Moteur (niveau 3)";
+    }
+
+    if (problem.includes("frein")) {
+        return "👨‍🔧 Technicien : Expert Système de Freinage & Sécurité";
+    }
+
+    if (problem.includes("climatisation")) {
+        return "👨‍🔧 Technicien : Spécialiste Systèmes Thermiques & Climatisation";
+    }
+
+    if (problem.includes("bruit")) {
+        return "👨‍🔧 Technicien : Ingénieur Diagnostic Mécanique Général";
+    }
+
+    if (problem.includes("livraison")) {
+        return "📦 Agent CRM : Responsable Livraison & Logistique Véhicule";
+    }
+
+    if (problem.includes("standard")) {
+        return "📞 Agent CRM : Support Relation Client & Standard";
+    }
+
+    return "👨‍💼 Agent Auto Nejma : Conseiller Service Client";
+}
+
+// ======================
+// CHATBOT
+// ======================
+function botResponse(msg) {
+
+    msg = msg.toLowerCase();
+
+    let tech = getTechnician(msg);
+
+    if (msg.includes("retard") || msg.includes("livraison")) {
+        return "📦 Nous comprenons le retard. Votre dossier est prioritaire.\n" + tech +
+        "\n\n👉 Souhaitez-vous prendre un rendez-vous de suivi ?";
+    }
+
+    if (msg.includes("standard") || msg.includes("répond")) {
+        return "📞 Nous sommes désolés pour la gêne.\n" + tech +
+        "\n\n👉 Un rappel téléphonique peut être programmé immédiatement.";
+    }
+
+    if (msg.includes("panne") || msg.includes("moteur") || msg.includes("frein") || msg.includes("clim")) {
+        return "⚠️ Nous prenons votre problème très au sérieux.\n" + tech +
+        "\n\n👉 Nous recommandons un rendez-vous atelier dès maintenant.";
+    }
+
+    if (msg.includes("réclamation")) {
+        return "🧾 Votre réclamation est transmise au service qualité.\n" + tech;
+    }
+
+    return "Merci pour votre message.\n" + tech +
+    "\n\n👉 Voulez-vous un rendez-vous ?";
+}
+
+// ======================
+// AFFICHAGE MESSAGE
+// ======================
+function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "msg " + type;
+    div.innerText = text;
+
+    const chat = document.getElementById("chat");
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+// ======================
+// ENVOI
+// ======================
+function send() {
+    const input = document.getElementById("input");
+    const text = input.value;
+    if (!text) return;
+
+    addMessage(text, "user");
+
+    setTimeout(() => {
+        addMessage(botResponse(text), "bot");
+    }, 500);
+
+    input.value = "";
+}
+
+// ======================
+// CLICK SUGGESTIONS
+// ======================
+function ask(text) {
+    addMessage(text, "user");
+
+    setTimeout(() => {
+        addMessage(botResponse(text), "bot");
+    }, 500);
+}
+
+// ======================
+// START
+// ======================
+window.onload = () => {
+    addMessage("Bonjour 👋 Je suis l’assistant Auto Nejma. Décrivez votre problème ou choisissez une option.", "bot");
+};
+
+</script>
+
+</body>
+</html>
